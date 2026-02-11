@@ -35,7 +35,7 @@ type TenantSpec struct {
 	// +optional
 	// +kubebuilder:default=0
 	// +kubebuilder:validation:Minimum=0
-	Generation int64 `json:"generation,omitempty"`
+	Generation *int64 `json:"generation,omitempty"`
 
 	// placementPolicy defines the placement strategy for the tenant
 	// Valid values:

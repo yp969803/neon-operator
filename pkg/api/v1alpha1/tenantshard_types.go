@@ -146,20 +146,6 @@ type TenantShardSpec struct {
 	// +required
 	Identity ShardIdentity `json:"identity"`
 
-	// generation is used for split-brain safety and to allow multiple pageservers to attach
-	// the same tenant concurrently.
-	//
-	// When nil, the generation is "None", which represents an incompletely onboarded tenant
-	// that may only run in PlacementPolicy::Secondary.
-	//
-	// When set, this is the latest generation number. The next time this shard is attached,
-	// this value is incremented and used as the attachment generation.
-	//
-	// See docs/rfcs/025-generation-numbers.md for details on how generation numbers are used.
-	// +optional
-	// +kubebuilder:validation:Minimum=0
-	Generation *int32 `json:"generation,omitempty"`
-
 	// policy defines the high-level placement strategy for how this shard should be set up
 	// Valid values:
 	// - "Attached(0)": Single node, development (default)
@@ -279,10 +265,19 @@ type TenantShardStatus struct {
 	// +optional
 	AssignedPageserver string `json:"assignedPageserver,omitempty"`
 
-	// attachmentGeneration tracks the current attachment generation on the pageserver
-	// Used to detect split-brain scenarios
+	// generation is used for split-brain safety and to allow multiple pageservers to attach
+	// the same tenant concurrently.
+	//
+	// When nil, the generation is "None", which represents an incompletely onboarded tenant
+	// that may only run in PlacementPolicy::Secondary.
+	//
+	// When set, this is the latest generation number. The next time this shard is attached,
+	// this value is incremented and used as the attachment generation.
+	//
+	// See docs/rfcs/025-generation-numbers.md for details on how generation numbers are used.
 	// +optional
-	AttachmentGeneration *int64 `json:"attachmentGeneration,omitempty"`
+	// +kubebuilder:validation:Minimum=0
+	Generation *int32 `json:"generation,omitempty"`
 
 	// lastUpdateTime is the last time this status was updated
 	// +optional
