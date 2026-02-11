@@ -69,8 +69,8 @@ func (o *Operator) sync(ctx context.Context, name, namespace string) error {
 	// Check if the referenced NeonCluster exists
 	neonCluster := &corev1alpha1.NeonCluster{}
 	neonClusterKey := client.ObjectKey{
-		Name:      tenant.Spec.Config.NeonClusterRef.Name,
-		Namespace: tenant.Spec.Config.NeonClusterRef.Namespace,
+		Name:      tenant.Spec.NeonClusterRef.Name,
+		Namespace: tenant.Spec.NeonClusterRef.Namespace,
 	}
 	if err := o.nclient.Get(ctx, neonClusterKey, neonCluster); err != nil {
 		if apierrors.IsNotFound(err) {

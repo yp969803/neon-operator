@@ -59,8 +59,9 @@ const (
 // TenantShardId globally identifies a particular shard in a particular tenant.
 //
 // These are written as `<TenantId>-<ShardSlug>`, for example:
-//   # The second shard in a two-shard tenant
-//   072f1291a5310026820b2fe4b2968934-0102
+//
+//	# The second shard in a two-shard tenant
+//	072f1291a5310026820b2fe4b2968934-0102
 //
 // If the shard count is unsharded (1), the TenantShardId is written without
 // a shard suffix and is equivalent to the encoding of a TenantId: this enables

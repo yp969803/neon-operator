@@ -30,6 +30,11 @@ const (
 // TenantSpec defines the desired state of Tenant.
 // +k8s:openapi-gen=true
 type TenantSpec struct {
+	// NeonClusterRef is a reference to the NeonCluster resource this tenant belongs to
+	// +required
+	NeonClusterRef v1.ObjectReference `json:"neonClusterRef"`
+
+	ShardParameters ShardParameters `json:"shardParameters,omitempty"`
 
 	// generation defines version number for split-brain safety
 	// +optional
@@ -57,10 +62,6 @@ type TenantSpec struct {
 // TenantConfig defines the desired state of Tenant.
 // +k8s:openapi-gen=true
 type TenantConfig struct {
-	// neonClusterRef is a reference to the NeonCluster resource this tenant belongs to
-	// +required
-	NeonClusterRef v1.ObjectReference `json:"neonClusterRef"`
-
 	// checkpointDistance defines the size threshold between checkpoints (L0 layer file size)
 	// Default: 268435456 (256 MB)
 	// +optional

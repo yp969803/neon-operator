@@ -270,50 +270,6 @@ spec:
                     format: int64
                     minimum: 0
                     type: integer
-                  neonClusterRef:
-                    description: neonClusterRef is a reference to the NeonCluster
-                      resource this tenant belongs to
-                    properties:
-                      apiVersion:
-                        description: API version of the referent.
-                        type: string
-                      fieldPath:
-                        description: |-
-                          If referring to a piece of an object instead of an entire object, this string
-                          should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
-                          For example, if the object reference is to a container within a pod, this would take on a value like:
-                          "spec.containers{name}" (where "name" refers to the name of the container that triggered
-                          the event) or if no container name is specified "spec.containers[2]" (container with
-                          index 2 in this pod). This syntax is chosen only to have some well-defined way of
-                          referencing a part of an object.
-                        type: string
-                      kind:
-                        description: |-
-                          Kind of the referent.
-                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-                        type: string
-                      name:
-                        description: |-
-                          Name of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                        type: string
-                      namespace:
-                        description: |-
-                          Namespace of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
-                        type: string
-                      resourceVersion:
-                        description: |-
-                          Specific resourceVersion to which this reference is made, if any.
-                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
-                        type: string
-                      uid:
-                        description: |-
-                          UID of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
-                        type: string
-                    type: object
-                    x-kubernetes-map-type: atomic
                   pitrInterval:
                     default: 168h
                     description: |-
@@ -368,8 +324,6 @@ spec:
                       walreceiverConnectTimeout defines the timeout for WAL receiver connection
                       Default: 10 seconds
                     type: string
-                required:
-                - neonClusterRef
                 type: object
               delayedReconcile:
                 default: false
@@ -380,21 +334,6 @@ spec:
                   This flag is cleared when the shard is popped off the delay queue and reconciliation
                   can proceed. It serves as a signal that reconciliation is pending but deferred.
                 type: boolean
-              generation:
-                description: |-
-                  generation is used for split-brain safety and to allow multiple pageservers to attach
-                  the same tenant concurrently.
-
-                  When nil, the generation is "None", which represents an incompletely onboarded tenant
-                  that may only run in PlacementPolicy::Secondary.
-
-                  When set, this is the latest generation number. The next time this shard is attached,
-                  this value is incremented and used as the attachment generation.
-
-                  See docs/rfcs/025-generation-numbers.md for details on how generation numbers are used.
-                format: int32
-                minimum: 0
-                type: integer
               identity:
                 description: identity contains the core shard identification and configuration
                 properties:
@@ -620,12 +559,6 @@ spec:
                 description: assignedPageserver is the name of the pageserver currently
                   hosting this shard
                 type: string
-              attachmentGeneration:
-                description: |-
-                  attachmentGeneration tracks the current attachment generation on the pageserver
-                  Used to detect split-brain scenarios
-                format: int64
-                type: integer
               conditions:
                 description: |-
                   conditions represent the current state of the TenantShard resource.
@@ -708,6 +641,21 @@ spec:
                   Incremented when a reconciliation is processed, and reset to 0 when no reconciliation
                   is needed for this shard.
                 format: int64
+                minimum: 0
+                type: integer
+              generation:
+                description: |-
+                  generation is used for split-brain safety and to allow multiple pageservers to attach
+                  the same tenant concurrently.
+
+                  When nil, the generation is "None", which represents an incompletely onboarded tenant
+                  that may only run in PlacementPolicy::Secondary.
+
+                  When set, this is the latest generation number. The next time this shard is attached,
+                  this value is incremented and used as the attachment generation.
+
+                  See docs/rfcs/025-generation-numbers.md for details on how generation numbers are used.
+                format: int32
                 minimum: 0
                 type: integer
               lastUpdateTime:
