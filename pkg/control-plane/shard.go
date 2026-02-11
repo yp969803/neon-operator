@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	corev1alpha1 "github.com/stateless-pg/stateless-pg/pkg/api/v1alpha1"
 )
 
 func (o *Operator) createOrUpdateShard(ctx context.Context, tenant *corev1alpha1.Tenant) error {
-    for _, cnt := range tenant.Spec.ShardParameters.Count {
+    for cnt := range tenant.Spec.ShardParameters.Count {
 		tenantId := fmt.Sprintf("%s-%s-%s-%s", tenant.Spec.NeonClusterRef.Namespace,tenant.Spec.NeonClusterRef.Name, tenant.Namespace, tenant.Name )
 		shardName := fmt.Sprintf("%s-%d", tenantId, cnt)
 		shard := &corev1alpha1.TenantShard{
@@ -20,7 +22,7 @@ func (o *Operator) createOrUpdateShard(ctx context.Context, tenant *corev1alpha1
 				},
 			},
 			Spec: corev1alpha1.TenantShardSpec{
-				
+
 			},
 		}
 	}
