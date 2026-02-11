@@ -79,5 +79,12 @@ func (o *Operator) sync(ctx context.Context, name, namespace string) error {
 		return fmt.Errorf("failed to get referenced NeonCluster: %w", err)
 	}
 
+	// Initialize generation if needed: if placement policy is not Secondary and generation is nil,
+	// set generation to INITIAL_GENERATION (0)
+	if tenant.Spec.PlacementPolicy != corev1alpha1.PlacementPolicySecondary && tenant.Spec.Generation == nil {
+		gen := corev1alpha1.InitialGeneration
+		tenant.Spec.Generation = &gen
+	}
+
 	return nil
 }

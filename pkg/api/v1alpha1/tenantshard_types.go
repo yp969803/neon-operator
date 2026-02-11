@@ -48,6 +48,12 @@ const (
 	// SplitState values
 	SplitStateIdle      = "Idle"
 	SplitStateSplitting = "Splitting"
+
+	// Generation constants
+	InitialGeneration int64 = 0
+
+	// Placement policy constants (for conditional logic)
+	PlacementPolicySecondary = "Secondary"
 )
 
 // TenantShardId globally identifies a particular shard in a particular tenant.
