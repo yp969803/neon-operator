@@ -17,7 +17,6 @@ limitations under the License.
 package v1alpha1
 
 import (
-	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -74,7 +73,7 @@ const (
 type TenantShardId struct {
 	// tenantId is the reference to the tenant this shard belongs to
 	// +required
-	TenantId v1.ObjectReference `json:"tenantId"`
+	TenantId string `json:"tenantId"`
 
 	// shardNumber is the shard number within the shard count
 	// Valid range: 0 to (shardCount - 1)

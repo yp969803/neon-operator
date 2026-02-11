@@ -7,6 +7,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	corev1alpha1 "github.com/stateless-pg/stateless-pg/pkg/api/v1alpha1"
+	"github.com/stateless-pg/stateless-pg/pkg/operator"
 )
 
 func (o *Operator) createOrUpdateShard(ctx context.Context, tenant *corev1alpha1.Tenant) error {
@@ -17,13 +18,28 @@ func (o *Operator) createOrUpdateShard(ctx context.Context, tenant *corev1alpha1
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      shardName,
 				Namespace: tenant.Namespace,
-				Labels: map[string]string{
-					"tenant": tenant.Name,
-				},
 			},
 			Spec: corev1alpha1.TenantShardSpec{
-
+				ShardId: corev1alpha1.TenantShardId{
+					TenantId:    tenantId,
+					ShardNumber: cnt,
+					ShardCount:  tenant.Spec.ShardParameters.Count,
+				},
+				Identity: corev1alpha1.ShardIdentity{
+					Number: cnt,
+					Count: tenant.Spec.ShardParameters.Count,
+				},
+				Policy: tenant.Spec.PlacementPolicy,
+				Config: &tenant.Spec.Config,
 			},
 		}
+		
+		operator.UpdateObject(shard,
+			operator.WithOwner(tenant),
+			operator.WithLabels(map[string]string{
+				"tenant": tenant.Name,
+			}),
+		)
 	}
+	return nil
 }
